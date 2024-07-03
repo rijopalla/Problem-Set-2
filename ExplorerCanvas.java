@@ -76,10 +76,10 @@ public class ExplorerCanvas extends JPanel {
         int canvasWidth = getWidth();
         int canvasHeight = getHeight();
 
-        int leftBoundary = (int) (sprite.getX() - 16 * sprite.getDiameter()); 
-        int rightBoundary = (int) (sprite.getX() + 16 * sprite.getDiameter());
-        int topBoundary = (int) (sprite.getY() - 9 * sprite.getDiameter());
-        int bottomBoundary = (int) (sprite.getY() + 9 * sprite.getDiameter());
+        int leftBoundary = (int) (sprite.getX() - 16 * 10); // 10 = particle diameter
+        int rightBoundary = (int) (sprite.getX() + 16 * 10);
+        int topBoundary = (int) (sprite.getY() - 9 * 10);
+        int bottomBoundary = (int) (sprite.getY() + 9 * 10);
 
         // draw particles
         for (Particle particle : particles) {
@@ -104,6 +104,12 @@ public class ExplorerCanvas extends JPanel {
 
         g.setColor(Color.BLACK);
         g.drawString("FPS: " + fps, 10, 10);
+
+        int positionX = (int) (spriteX - getWidth() / 2);
+        int positionY = (int) (spriteY - getHeight() / 2);
+
+        g.drawString("Sprite Position: (" + positionX + ", " + positionY + ")", 10, 40);
+
     }
 
     public void toggleExplorerMode() {

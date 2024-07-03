@@ -3,7 +3,6 @@ import java.awt.*;
 public class Sprite {
     private double x, y;
     private double initialX, initialY;
-    private double velocity = 2.0;
     private int diameter = 10;
 
     public Sprite(double x, double y) {
@@ -14,8 +13,8 @@ public class Sprite {
     }
 
     public void move(double dx, double dy) {
-        x += dx * velocity;
-        y += dy * velocity;
+        x += dx;
+        y += dy;
     }
     public int getDiameter() {
         return this.diameter;
