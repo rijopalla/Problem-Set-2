@@ -4,14 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class ParticleSimulation extends JPanel {
     private Canvas canvas;
     private JTextField startXField, startYField, velocityField, startThetaField;
     private JButton addButton;
-    private boolean isInExplorerMode = false;
     private ExplorerCanvas explorerCanvas;
     private JRadioButton batchOption1, batchOption2, batchOption3;
     private JButton explorerModeButton;
@@ -158,6 +156,7 @@ public class ParticleSimulation extends JPanel {
             remove(explorerCanvas);
             add(canvas, BorderLayout.CENTER);
             explorerModeButton.setText("Switch to Explorer Mode");
+            explorerCanvas = null;
         }
 
         revalidate();

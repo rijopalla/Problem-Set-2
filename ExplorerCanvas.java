@@ -76,10 +76,10 @@ public class ExplorerCanvas extends JPanel {
         int canvasWidth = getWidth();
         int canvasHeight = getHeight();
 
-        int leftBoundary = (int) (sprite.getX() - 16 * 10); // 10 = particle diameter
-        int rightBoundary = (int) (sprite.getX() + 16 * 10);
-        int topBoundary = (int) (sprite.getY() - 9 * 10);
-        int bottomBoundary = (int) (sprite.getY() + 9 * 10);
+        int leftBoundary = (int) (sprite.getX() - 16 * sprite.getDiameter()); 
+        int rightBoundary = (int) (sprite.getX() + 16 * sprite.getDiameter());
+        int topBoundary = (int) (sprite.getY() - 9 * sprite.getDiameter());
+        int bottomBoundary = (int) (sprite.getY() + 9 * sprite.getDiameter());
 
         // draw particles
         for (Particle particle : particles) {
