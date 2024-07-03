@@ -13,8 +13,8 @@ public class Sprite {
     }
 
     public void move(double dx, double dy) {
-        x += dx;
-        y += dy;
+        this.x += dx;
+        this.y += dy;
     }
     public int getDiameter() {
         return this.diameter;

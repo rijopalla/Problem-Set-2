@@ -81,6 +81,18 @@ public class ExplorerCanvas extends JPanel {
         int topBoundary = (int) (sprite.getY() - 9 * 10);
         int bottomBoundary = (int) (sprite.getY() + 9 * 10);
 
+        //set color out of periphery
+        g.setColor(Color.BLACK);
+
+        //top
+        g.fillRect(0, 0, canvasWidth, topBoundary);
+        //bottom
+        g.fillRect(0, bottomBoundary, canvasWidth, canvasHeight - bottomBoundary);
+        //left
+        g.fillRect(0, topBoundary, leftBoundary, bottomBoundary - topBoundary);
+        //right
+        g.fillRect(rightBoundary, topBoundary, canvasWidth - rightBoundary, bottomBoundary - topBoundary);
+
         // draw particles
         for (Particle particle : particles) {
             double particleX = particle.getX();
@@ -104,12 +116,6 @@ public class ExplorerCanvas extends JPanel {
 
         g.setColor(Color.BLACK);
         g.drawString("FPS: " + fps, 10, 10);
-
-        int positionX = (int) (spriteX - getWidth() / 2);
-        int positionY = (int) (spriteY - getHeight() / 2);
-
-        g.drawString("Sprite Position: (" + positionX + ", " + positionY + ")", 10, 40);
-
     }
 
     public void toggleExplorerMode() {
