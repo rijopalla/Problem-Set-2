@@ -4,11 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParticleSimulation extends JPanel {
     private Canvas canvas;
     private JTextField startXField, startYField, velocityField, startThetaField;
     private JButton addButton;
+    private boolean isInExplorerMode = false;
+    private ExplorerCanvas explorerCanvas;
     private JRadioButton batchOption1, batchOption2, batchOption3;
     private JButton explorerModeButton;
 
@@ -78,24 +82,12 @@ public class ParticleSimulation extends JPanel {
         sidebar.add(batchPanel);
         sidebar.add(addButton);
 
+        //explorer mode
         explorerModeButton = new JButton("Switch to Explorer Mode");
         explorerModeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!canvas.isExplorerMode()) {
-                    String inputX = JOptionPane.showInputDialog(ParticleSimulation.this,
-                    "Enter X position for sprite:");
-                    String inputY = JOptionPane.showInputDialog(ParticleSimulation.this,
-                    "Enter Y position for sprite:");
-
-                    double spriteX = inputX != null && !inputX.isEmpty() ? Double.parseDouble(inputX) : canvas.getWidth() / 2.0;
-                    double spriteY = inputY != null && !inputY.isEmpty() ? Double.parseDouble(inputY) : canvas.getHeight() / 2.0;
-
-                    canvas.setSpritePosition(spriteX, spriteY);
-                }
-                canvas.toggleExplorerMode();
-                explorerModeButton.setText(canvas.isExplorerMode() ? "Switch to Developer Mode" : "Switch to Explorer Mode");
-                canvas.drawExplorerMode(getGraphics());
+                handleExplorerMode();
             }
         });
         sidebar.add(explorerModeButton);
@@ -143,6 +135,33 @@ public class ParticleSimulation extends JPanel {
                 canvas.repaint();
             }
         }, 0, 16); //approximately 60 FPS
+    }
+
+    private void handleExplorerMode() {
+        if (explorerCanvas == null) {
+            String inputX = JOptionPane.showInputDialog(ParticleSimulation.this,
+            "Enter X position for sprite:");
+            String inputY = JOptionPane.showInputDialog(ParticleSimulation.this,
+            "Enter Y position for sprite:");
+            double spriteX = Double.parseDouble(inputX);
+            double spriteY = Double.parseDouble(inputY);
+            explorerCanvas = new ExplorerCanvas(canvas.getParticles(), spriteX, spriteY);
+        }
+
+        explorerCanvas.toggleExplorerMode();
+
+        if (explorerCanvas.isExplorerMode()) {
+            remove(canvas);
+            add(explorerCanvas, BorderLayout.CENTER);
+            explorerModeButton.setText("Switch to Developer Mode");
+        } else {
+            remove(explorerCanvas);
+            add(canvas, BorderLayout.CENTER);
+            explorerModeButton.setText("Switch to Explorer Mode");
+        }
+
+        revalidate();
+        repaint();
     }
 
     private void handleBatchOption1() { //if batch option 1 was picked
@@ -289,6 +308,7 @@ public class ParticleSimulation extends JPanel {
             }
         }
     }
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Particle Simulation");

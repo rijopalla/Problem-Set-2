@@ -56,9 +56,37 @@ public class Particle {
         y = Math.max(0, Math.min(y, canvas.getHeight() - diameter));
     }
 
+    public void update(ExplorerCanvas explorerCanvas) {
+        x += velocity * Math.cos(theta);
+        y += velocity * Math.sin(theta);
+
+        //check if the particle has reached or exceeded targetTheta
+        if (!Double.isNaN(targetTheta) && Math.abs(theta - targetTheta) < 0.01) {
+            hasTarget = true;
+            targetX = x;
+            targetY = y;
+        }
+
+        //check for boundary collision and reflect
+        if (x <= 0 || x >= explorerCanvas.getWidth() - diameter) {
+            theta = Math.PI - theta; //reflect horizontally
+        }
+        if (y <= 0 || y >= explorerCanvas.getHeight() - diameter) {
+            theta = -theta; //reflect vertically
+        }
+
+        //make sure particles stay within boundaries after reflection
+        x = Math.max(0, Math.min(x, explorerCanvas.getWidth() - diameter));
+        y = Math.max(0, Math.min(y, explorerCanvas.getHeight() - diameter));
+    }
+    
     public void draw(Graphics g, int canvasHeight) { 
         int drawY = canvasHeight - (int)y - diameter; //invert y-coordinates to meet specs where coordinate (0,0) should be on the bottom left
         g.fillOval((int)x, drawY, diameter, diameter); 
+    }
+
+    public void draw(Graphics g, int drawX, int drawY) {
+        g.fillOval(drawX, drawY, (int) diameter, (int) diameter);
     }
 
     public boolean checkTarget() {
@@ -113,6 +141,15 @@ public class Particle {
     public double getY() {
         return this.y;
     }
+
+    public int getDiameter() {
+        return diameter;
+    }
+
+    public void setDiameter(int diameter) {
+        this.diameter = diameter;
+    }
+
 
     public boolean isBatch3() {
         return isBatch3;
