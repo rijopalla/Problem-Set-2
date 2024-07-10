@@ -33,12 +33,12 @@ public class ExplorerCanvas extends JPanel {
                 switch (keyCode) {
                     case KeyEvent.VK_W: // W
                     case KeyEvent.VK_UP: // up arrow key:
-                        sprite.move(0, 10);
+                        sprite.move(0, -10);
                         System.out.println("up");
                         break;
                     case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN: // down arrow key
-                        sprite.move(0, -10);
+                        sprite.move(0, 10);
                         System.out.println("down");
                         break;
                     case KeyEvent.VK_A: // A
@@ -113,7 +113,7 @@ public class ExplorerCanvas extends JPanel {
         frames++;
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastTime >= 500) { //update every 0.5 seconds
-            fps = (int) (frames / ((currentTime - lastTime) / 500.0)); //calculate FPS
+            fps = (int) (frames / ((currentTime - lastTime) / 1000.0)); //calculate FPS
             frames = 0;
             lastTime = currentTime;
         }
