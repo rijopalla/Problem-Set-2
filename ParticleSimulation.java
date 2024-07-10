@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
+import java.util.List;
 
 
 public class ParticleSimulation extends JPanel {
@@ -13,6 +15,7 @@ public class ParticleSimulation extends JPanel {
     private ExplorerCanvas explorerCanvas;
     private JRadioButton batchOption1, batchOption2, batchOption3;
     private JButton explorerModeButton;
+    private List<Particle> savedState;
 
     public ParticleSimulation() {
         setLayout(new BorderLayout());
@@ -144,6 +147,9 @@ public class ParticleSimulation extends JPanel {
             double spriteX = Double.parseDouble(inputX);
             double spriteY = Double.parseDouble(inputY);
             explorerCanvas = new ExplorerCanvas(canvas.getParticles(), spriteX, spriteY);
+            savedState = canvas.getParticles().stream()
+                            .map(p -> new Particle(p.getX(), p.getY(), p.getVelocity(), p.getTheta()))
+                            .collect(Collectors.toList());
         }
 
         explorerCanvas.toggleExplorerMode();
@@ -153,6 +159,11 @@ public class ParticleSimulation extends JPanel {
             add(explorerCanvas, BorderLayout.CENTER);
             explorerModeButton.setText("Switch to Developer Mode");
         } else {
+            for (Particle savedParticle : savedState) {
+                canvas.addParticle(savedParticle);
+            }
+            savedState = null;
+            
             remove(explorerCanvas);
             add(canvas, BorderLayout.CENTER);
             explorerModeButton.setText("Switch to Explorer Mode");

@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 import java.awt.*;
-
+import java.util.Timer;
 import javax.swing.JPanel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,9 @@ public class Canvas extends JPanel {
     private int frames;
     private long lastTime;
     private final ExecutorService es;
+    private Timer fpsCounterTimer;
+    private int totalFrames;
+    private long lastFpsUpdateTime;
 
     public Canvas() {
         particles = new ArrayList<>();
@@ -20,6 +24,19 @@ public class Canvas extends JPanel {
         frames = 0;
         fps = 0;
         es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        fpsCounterTimer = new Timer();
+        fpsCounterTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastFpsUpdateTime >= 500) {
+                    fps = (int) (totalFrames / ((currentTime - lastFpsUpdateTime) / 500.0));
+                    totalFrames = 0;
+                    lastFpsUpdateTime = currentTime;
+                    repaint(); //trigger repaint to update the FPS display
+                }
+            }
+        }, 0, 500); //update FPS every 0.5 seconds
     }
 
     public Canvas(List<Particle> particles) {
@@ -51,6 +68,8 @@ public class Canvas extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        totalFrames++;
         
         //update and draw particles
         List<Particle> particlesToRemove = new ArrayList<>();
@@ -84,6 +103,7 @@ public class Canvas extends JPanel {
         //display FPS
         g.setColor(Color.BLACK);
         g.drawString("FPS: " + fps, 10, 10);
+        
         
     }
 

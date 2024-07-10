@@ -79,7 +79,7 @@ public class Particle {
         x = Math.max(0, Math.min(x, explorerCanvas.getWidth() - diameter));
         y = Math.max(0, Math.min(y, explorerCanvas.getHeight() - diameter));
     }
-    
+
     public void draw(Graphics g, int canvasHeight) { 
         int drawY = canvasHeight - (int)y - diameter; //invert y-coordinates to meet specs where coordinate (0,0) should be on the bottom left
         g.fillOval((int)x, drawY, diameter, diameter); 
@@ -153,6 +153,14 @@ public class Particle {
 
     public boolean isBatch3() {
         return isBatch3;
+    }
+
+    public double getVelocity() {
+        return this.velocity;
+    }
+
+    public double getTheta() {
+        return this.theta;
     }
 
     public void setIsBatch3(boolean isBatch3) {

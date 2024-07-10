@@ -114,7 +114,7 @@ public class ExplorerCanvas extends JPanel {
             lastTime = currentTime;
         }
 
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.drawString("FPS: " + fps, 10, 10);
     }
 
