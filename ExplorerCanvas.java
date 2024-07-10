@@ -15,13 +15,14 @@ public class ExplorerCanvas extends JPanel {
     private long lastTime;
     private boolean explorerMode = false;
     private double spriteX, spriteY;
+    private Timer particleUpdateTimer;
 
 
     public ExplorerCanvas(List<Particle> particles, double spriteX, double spriteY) {
         this.particles = particles;
         this.spriteX = spriteX;
         this.spriteY = spriteY;
-        sprite = new Sprite(640, 360); // initially center sprite at middle of the screen
+        sprite = new Sprite(640, 360); //initially center sprite at middle of the screen
 
         setFocusable(true);
         requestFocus();
@@ -56,15 +57,7 @@ public class ExplorerCanvas extends JPanel {
             }
         });
 
-        // Schedule regular updates for particles
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                updateParticles();
-                repaint();
-            }
-        }, 0, 16); // approximately 60 FPS
+        startParticleUpdates(); 
     }
 
     private void updateParticles() {
@@ -80,7 +73,7 @@ public class ExplorerCanvas extends JPanel {
         int canvasWidth = getWidth();
         int canvasHeight = getHeight();
 
-        int leftBoundary = (int) (sprite.getX() - 16 * 10); // 10 = particle diameter
+        int leftBoundary = (int) (sprite.getX() - 16 * 10); //10 = particle diameter
         int rightBoundary = (int) (sprite.getX() + 16 * 10);
         int topBoundary = (int) (sprite.getY() - 9 * 10);
         int bottomBoundary = (int) (sprite.getY() + 9 * 10);
@@ -129,5 +122,25 @@ public class ExplorerCanvas extends JPanel {
 
     public boolean isExplorerMode() {
         return this.explorerMode;
+    }
+
+    public void startParticleUpdates() {
+        if (particleUpdateTimer == null) {
+            particleUpdateTimer = new Timer();
+            particleUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    updateParticles();
+                    repaint();
+                }
+            }, 0, 16); //approximately 60 FPS
+        }
+    }
+
+    public void stopParticleUpdates() {
+        if (particleUpdateTimer != null) {
+            particleUpdateTimer.cancel();
+            particleUpdateTimer = null;
+        }
     }
 }

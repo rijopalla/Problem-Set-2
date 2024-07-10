@@ -155,11 +155,13 @@ public class ParticleSimulation extends JPanel {
         explorerCanvas.toggleExplorerMode();
 
         if (explorerCanvas.isExplorerMode()) {
+            explorerCanvas.startParticleUpdates();
             remove(canvas);
             add(explorerCanvas, BorderLayout.CENTER);
             explorerModeButton.setText("Switch to Developer Mode");
             explorerCanvas.requestFocusInWindow(); 
         } else {
+            explorerCanvas.stopParticleUpdates();
             canvas.clearParticles();
             for (Particle savedParticle : savedState) {
                 canvas.addParticle(savedParticle);
