@@ -160,6 +160,7 @@ public class ParticleSimulation extends JPanel {
             explorerModeButton.setText("Switch to Developer Mode");
             explorerCanvas.requestFocusInWindow(); 
         } else {
+            canvas.clearParticles();
             for (Particle savedParticle : savedState) {
                 canvas.addParticle(savedParticle);
             }
@@ -208,16 +209,16 @@ public class ParticleSimulation extends JPanel {
                     return;
                 }
 
-            // Calculate the total distance between start and end points
+            //calculate the total distance between start and end points
             double totalDistance = Math.hypot(endX - startX, endY - startY);
             
-            // Define a scaling factor to adjust the spacing between particles
+            //define a scaling factor to adjust the spacing between particles
             double scaleFactor = 1.0; // Adjust this value to control the spacing
              
-            // Calculate the scaled distance between particles
+            //calculate the scaled distance between particles
             double scaledDistance = totalDistance / ((numParticles - 1) * scaleFactor);
 
-            // Calculate the unit vector pointing from start to end
+            //calculate the unit vector pointing from start to end
             double unitDX = (endX - startX) / totalDistance;
             double unitDY = (endY - startY) / totalDistance;
 

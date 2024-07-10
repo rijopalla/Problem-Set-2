@@ -64,6 +64,10 @@ public class Canvas extends JPanel {
         repaint();
     }
 
+    public void clearParticles() {
+        particles.clear();
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
