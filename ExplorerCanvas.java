@@ -24,7 +24,7 @@ public class ExplorerCanvas extends JPanel {
         sprite = new Sprite(640, 360); // initially center sprite at middle of the screen
 
         setFocusable(true);
-        requestFocusInWindow();
+        requestFocus();
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -33,19 +33,23 @@ public class ExplorerCanvas extends JPanel {
                 switch (keyCode) {
                     case KeyEvent.VK_W: // W
                     case KeyEvent.VK_UP: // up arrow key:
-                        sprite.move(0, -10);
+                        sprite.move(0, 10);
+                        System.out.println("up");
                         break;
                     case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN: // down arrow key
-                        sprite.move(0, 10);
+                        sprite.move(0, -10);
+                        System.out.println("down");
                         break;
                     case KeyEvent.VK_A: // A
                     case KeyEvent.VK_LEFT: // left arrow key
                         sprite.move(-10, 0);
+                        System.out.println("left");
                         break;
                     case KeyEvent.VK_D: // D
                     case KeyEvent.VK_RIGHT: // right arrow key
                         sprite.move(10, 0);
+                        System.out.println("right");
                         break;
                 }
                 repaint();
