@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JPanel;
 import java.util.Timer;
-
 import java.util.TimerTask;
 
 public class ExplorerCanvas extends JPanel {
@@ -14,15 +13,14 @@ public class ExplorerCanvas extends JPanel {
     private int frames;
     private long lastTime;
     private boolean explorerMode = false;
-    private double spriteX, spriteY;
     private Timer particleUpdateTimer;
 
+    private static final int PERIPHERY_COLUMNS = 16;
+    private static final int PERIPHERY_ROWS = 9;
 
     public ExplorerCanvas(List<Particle> particles, double spriteX, double spriteY) {
         this.particles = particles;
-        this.spriteX = spriteX;
-        this.spriteY = spriteY;
-        sprite = new Sprite(640, 360); //initially center sprite at middle of the screen
+        this.sprite = new Sprite(spriteX, spriteY);
 
         setFocusable(true);
         requestFocus();
@@ -34,30 +32,26 @@ public class ExplorerCanvas extends JPanel {
                 switch (keyCode) {
                     case KeyEvent.VK_W: // W
                     case KeyEvent.VK_UP: // up arrow key:
-                        sprite.move(0, -10);
-                        System.out.println("up");
+                        sprite.move(0, 10);
                         break;
                     case KeyEvent.VK_S:
                     case KeyEvent.VK_DOWN: // down arrow key
-                        sprite.move(0, 10);
-                        System.out.println("down");
+                        sprite.move(0, -10);
                         break;
                     case KeyEvent.VK_A: // A
                     case KeyEvent.VK_LEFT: // left arrow key
                         sprite.move(-10, 0);
-                        System.out.println("left");
                         break;
                     case KeyEvent.VK_D: // D
                     case KeyEvent.VK_RIGHT: // right arrow key
                         sprite.move(10, 0);
-                        System.out.println("right");
                         break;
                 }
                 repaint();
             }
         });
 
-        startParticleUpdates(); 
+        startParticleUpdates();
     }
 
     private void updateParticles() {
@@ -73,24 +67,25 @@ public class ExplorerCanvas extends JPanel {
         int canvasWidth = getWidth();
         int canvasHeight = getHeight();
 
-        int leftBoundary = (int) (sprite.getX() - 16 * 10); //10 = particle diameter
-        int rightBoundary = (int) (sprite.getX() + 16 * 10);
-        int topBoundary = (int) (sprite.getY() - 9 * 10);
-        int bottomBoundary = (int) (sprite.getY() + 9 * 10);
+        int leftBoundary = (int) (640 - PERIPHERY_COLUMNS * 10);
+        int rightBoundary = (int) (640 + PERIPHERY_COLUMNS * 10);
+        int topBoundary = (int) (360 - PERIPHERY_ROWS * 10);
+        int bottomBoundary = (int) (360 + PERIPHERY_ROWS * 10);
 
-        //set color out of periphery
-        g.setColor(Color.BLACK);
+        leftBoundary = Math.max(leftBoundary, 0);
+        rightBoundary = Math.min(rightBoundary, canvasWidth);
+        topBoundary = Math.max(topBoundary, 0);
+        bottomBoundary = Math.min(bottomBoundary, canvasHeight);
 
-        //top
-        g.fillRect(0, 0, canvasWidth, topBoundary);
-        //bottom
-        g.fillRect(0, bottomBoundary, canvasWidth, canvasHeight - bottomBoundary);
-        //left
-        g.fillRect(0, topBoundary, leftBoundary, bottomBoundary - topBoundary);
-        //right
-        g.fillRect(rightBoundary, topBoundary, canvasWidth - rightBoundary, bottomBoundary - topBoundary);
 
-        // draw particles
+        g.fillRect(0, 0, canvasWidth, topBoundary); // Top
+        g.fillRect(0, bottomBoundary, canvasWidth, canvasHeight - bottomBoundary); // Bottom
+        g.fillRect(0, topBoundary, leftBoundary, bottomBoundary - topBoundary); // Left
+        g.fillRect(rightBoundary, topBoundary, canvasWidth - rightBoundary, bottomBoundary - topBoundary); // Right
+
+        g.setColor(Color.GRAY);
+
+        //draw particles within the periphery
         for (Particle particle : particles) {
             double particleX = particle.getX();
             double particleY = particle.getY();
@@ -100,17 +95,19 @@ public class ExplorerCanvas extends JPanel {
             }
         }
 
-        // draw sprite
+        //draw sprite 
         sprite.draw(g, canvasWidth, canvasHeight);
 
+        //calculate FPS
         frames++;
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTime >= 500) { //update every 0.5 seconds
-            fps = (int) (frames / ((currentTime - lastTime) / 1000.0)); //calculate FPS
+        if (currentTime - lastTime >= 500) { // Update every 0.5 seconds
+            fps = (int) (frames / ((currentTime - lastTime) / 1000.0)); // Calculate FPS
             frames = 0;
             lastTime = currentTime;
         }
 
+        //display FPS
         g.setColor(Color.WHITE);
         g.drawString("FPS: " + fps, 10, 10);
     }
